@@ -1,0 +1,147 @@
+{% extends 'base.html' %}
+
+{% block title %}Create Game - GameForge{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-12">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h3 class="card-title mb-0">Create New Game Concept</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-text">Fill out the form below to create a new game concept. Our AI will help generate a complete game universe based on your inputs.</p>
+                
+                <form method="post" id="createGameForm">
+                    {% csrf_token %}
+                    
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="{{ form.title.id_for_label }}" class="form-label">Game Title</label>
+                                {{ form.title.errors }}
+                                {{ form.title }}
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="{{ form.genre.id_for_label }}" class="form-label">Genre</label>
+                                {{ form.genre.errors }}
+                                {{ form.genre }}
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="{{ form.ambiance.id_for_label }}" class="form-label">Ambiance</label>
+                                {{ form.ambiance.errors }}
+                                {{ form.ambiance }}
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="{{ form.theme_keywords.id_for_label }}" class="form-label">Theme Keywords</label>
+                                {{ form.theme_keywords.errors }}
+                                {{ form.theme_keywords }}
+                                <div class="form-text">Enter keywords separated by commas (e.g., time travel, revenge, AI rebellion)</div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="{{ form.cultural_references.id_for_label }}" class="form-label">Cultural References (Optional)</label>
+                                {{ form.cultural_references.errors }}
+                                {{ form.cultural_references }}
+                                <div class="form-text">Enter references separated by commas (e.g., Zelda, Hollow Knight, Disco Elysium)</div>
+                            </div>
+                            
+                            <div class="mb-3 form-check">
+                                {{ form.is_public }}
+                                <label class="form-check-label" for="{{ form.is_public.id_for_label }}">Make this game public</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="alert alert-info" id="aiGenerationInfo">
+                        <h5>AI Generation</h5>
+                        <p>When you submit this form, our AI will generate:</p>
+                        <ul>
+                            <li>A coherent game universe based on your inputs</li>
+                            <li>A structured story with narrative arcs</li>
+                            <li>2-4 characters with backgrounds and abilities</li>
+                            <li>Key locations with descriptions</li>
+                            <li>Concept art for your game</li>
+                        </ul>
+                        <p class="mb-0">This process may take a few moments. Please be patient.</p>
+                    </div>
+                    
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary" id="generateButton">Generate Game Concept</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Loading Modal -->
+<div class="modal fade" id="loadingModal" tabindex="-1" aria-labelledby="loadingModalLabel" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="loadingModalLabel">Generating Your Game Concept</h5>
+            </div>
+            <div class="modal-body text-center">
+                <div class="spinner-border text-primary mb-3" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <p id="generationStatus">Initializing AI models...</p>
+                <div class="progress mb-3">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.getElementById('createGameForm');
+        const loadingModal = new bootstrap.Modal(document.getElementById('loadingModal'));
+        const progressBar = document.querySelector('.progress-bar');
+        const statusText = document.getElementById('generationStatus');
+        
+        form.addEventListener('submit', function(e) {
+            // In a real implementation, we would not prevent the default form submission
+            // This is just for demonstration purposes to show the loading modal
+            // e.preventDefault();
+            
+            loadingModal.show();
+            
+            // Simulate progress (in a real implementation, this would be updated based on actual progress)
+            let progress = 0;
+            const interval = setInterval(function() {
+                progress += 10;
+                progressBar.style.width = progress + '%';
+                
+                if (progress === 20) {
+                    statusText.textContent = 'Generating game universe...';
+                } else if (progress === 40) {
+                    statusText.textContent = 'Creating characters...';
+                } else if (progress === 60) {
+                    statusText.textContent = 'Developing story...';
+                } else if (progress === 80) {
+                    statusText.textContent = 'Generating concept art...';
+                } else if (progress >= 100) {
+                    statusText.textContent = 'Finalizing your game concept...';
+                    clearInterval(interval);
+                    
+                    // In a real implementation, we would not need this timeout
+                    // The form would be submitted and the page would redirect
+                    setTimeout(function() {
+                        form.submit();
+                    }, 1000);
+                }
+            }, 500);
+        });
+    });
+</script>
+{% endblock %}

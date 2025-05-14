@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+
+{% block title %}Profile - GameForge{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-4">
+        <div class="card shadow mb-4">
+            <div class="card-header bg-primary text-white">
+                <h3 class="card-title mb-0">Profile Information</h3>
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">{{ user.username }}</h5>
+                <p class="card-text"><strong>Email:</strong> {{ user.email }}</p>
+                <p class="card-text"><strong>Date Joined:</strong> {{ user.date_joined|date:"F j, Y" }}</p>
+                <p class="card-text"><strong>API Usage:</strong> {{ user.api_usage_count }} / 50</p>
+                <div class="progress mb-3">
+                    <div class="progress-bar bg-info" role="progressbar" style="width: {{ user.api_usage_count|divisibleby:2 }}%;" aria-valuenow="{{ user.api_usage_count }}" aria-valuemin="0" aria-valuemax="50">{{ user.api_usage_count }} / 50</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-8">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h3 class="card-title mb-0">Your Activity</h3>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4 text-center mb-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ user.games.count }}</h5>
+                                <p class="card-text">Games Created</p>
+                                <a href="{% url 'games:dashboard' %}" class="btn btn-sm btn-outline-primary">View Games</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 text-center mb-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ user.favorites.count }}</h5>
+                                <p class="card-text">Favorites</p>
+                                <a href="{% url 'games:favorites' %}" class="btn btn-sm btn-outline-primary">View Favorites</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 text-center mb-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ user.api_usage_count }}</h5>
+                                <p class="card-text">API Calls</p>
+                                <button class="btn btn-sm btn-outline-secondary" disabled>API Usage</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-4">
+                    <h4>Recent Activity</h4>
+                    {% if user.games.all %}
+                    <ul class="list-group">
+                        {% for game in user.games.all|slice:":5" %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <div>
+                                <strong>{{ game.title }}</strong>
+                                <span class="badge bg-secondary ms-2">{{ game.get_genre_display }}</span>
+                                <small class="text-muted d-block">Created on {{ game.created_at|date:"F j, Y" }}</small>
+                            </div>
+                            <a href="{% url 'games:game_detail' game.id %}" class="btn btn-sm btn-outline-primary">View</a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    {% else %}
+                    <div class="alert alert-info">
+                        You haven't created any games yet. <a href="{% url 'games:create_game' %}">Create your first game!</a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard - GameForge{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-12">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                <h3 class="card-title mb-0">My Game Concepts</h3>
+                <div>
+                    <a href="{% url 'games:create_game' %}" class="btn btn-light">Create New Game</a>
+                    <a href="{% url 'games:random_game' %}" class="btn btn-outline-light">Random Game</a>
+                </div>
+            </div>
+            <div class="card-body">
+                <p class="card-text">This is your personal dashboard where you can manage all your game concepts.</p>
+                <div class="row text-center">
+                    <div class="col-md-4">
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ games.count }}</h5>
+                                <p class="card-text">Total Games</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ games|dictsortreversed:"created_at"|first|default:"None" }}</h5>
+                                <p class="card-text">Latest Game</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ user.api_usage_count }}</h5>
+                                <p class="card-text">API Calls Used</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if games %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h3 class="card-title mb-0">My Games</h3>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>Genre</th>
+                                <th>Ambiance</th>
+                                <th>Created</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for game in games %}
+                            <tr>
+                                <td>{{ game.title }}</td>
+                                <td><span class="badge bg-primary">{{ game.get_genre_display }}</span></td>
+                                <td><span class="badge bg-secondary">{{ game.get_ambiance_display }}</span></td>
+                                <td>{{ game.created_at|date:"M d, Y" }}</td>
+                                <td>
+                                    {% if game.is_public %}
+                                    <span class="badge bg-success">Public</span>
+                                    {% else %}
+                                    <span class="badge bg-warning text-dark">Private</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <div class="btn-group" role="group">
+                                        <a href="{% url 'games:game_detail' game.id %}" class="btn btn-sm btn-outline-primary">View</a>
+                                        <a href="{% url 'games:toggle_public' game.id %}" class="btn btn-sm btn-outline-secondary">
+                                            {% if game.is_public %}Make Private{% else %}Make Public{% endif %}
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% else %}
+<div class="alert alert-info">
+    <p>You haven't created any games yet.</p>
+    <a href="{% url 'games:create_game' %}" class="btn btn-primary">Create Your First Game</a>
+</div>
+{% endif %}
+{% endblock %}

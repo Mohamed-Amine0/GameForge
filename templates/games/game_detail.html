@@ -1,0 +1,179 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ game.title }} - GameForge{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-12">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'games:home' %}">Home</a></li>
+                {% if user == game.user %}
+                <li class="breadcrumb-item"><a href="{% url 'games:dashboard' %}">Dashboard</a></li>
+                {% endif %}
+                <li class="breadcrumb-item active" aria-current="page">{{ game.title }}</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-8">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                <h2 class="card-title mb-0">{{ game.title }}</h2>
+                <div>
+                    {% if user == game.user %}
+                    <a href="{% url 'games:toggle_public' game.id %}" class="btn btn-sm btn-light">
+                        {% if game.is_public %}Make Private{% else %}Make Public{% endif %}
+                    </a>
+                    {% endif %}
+                    
+                    {% if user.is_authenticated %}
+                    <a href="{% url 'games:toggle_favorite' game.id %}" class="btn btn-sm {% if is_favorite %}btn-warning{% else %}btn-outline-light{% endif %}">
+                        {% if is_favorite %}★ Favorited{% else %}☆ Add to Favorites{% endif %}
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="mb-4">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <div>
+                            <span class="badge bg-primary">{{ game.get_genre_display }}</span>
+                            <span class="badge bg-secondary">{{ game.get_ambiance_display }}</span>
+                            {% if not game.is_public %}
+                            <span class="badge bg-warning text-dark">Private</span>
+                            {% endif %}
+                        </div>
+                        <small class="text-muted">Created by {{ game.user.username }} on {{ game.created_at|date:"F j, Y" }}</small>
+                    </div>
+                    
+                    <h4>Keywords</h4>
+                    <p>{{ game.theme_keywords }}</p>
+                    
+                    {% if game.cultural_references %}
+                    <h4>Cultural References</h4>
+                    <p>{{ game.cultural_references }}</p>
+                    {% endif %}
+                </div>
+                
+                <div class="mb-4">
+                    <h3>Game Universe</h3>
+                    <p>{{ game.universe_description|linebreaks }}</p>
+                </div>
+                
+                <div class="mb-4">
+                    <h3>Story</h3>
+                    <p>{{ game.story_description|linebreaks }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <!-- Characters -->
+        <div class="card shadow mb-4">
+            <div class="card-header bg-primary text-white">
+                <h3 class="card-title mb-0">Characters</h3>
+            </div>
+            <div class="card-body">
+                {% if game.characters.all %}
+                <div class="accordion" id="charactersAccordion">
+                    {% for character in game.characters.all %}
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="heading{{ character.id }}">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ character.id }}" aria-expanded="false" aria-controls="collapse{{ character.id }}">
+                                {{ character.name }} - {{ character.role }}
+                            </button>
+                        </h2>
+                        <div id="collapse{{ character.id }}" class="accordion-collapse collapse" aria-labelledby="heading{{ character.id }}" data-bs-parent="#charactersAccordion">
+                            <div class="accordion-body">
+                                <h5>Background</h5>
+                                <p>{{ character.background|linebreaks }}</p>
+                                
+                                <h5>Abilities</h5>
+                                <p>{{ character.abilities|linebreaks }}</p>
+                                
+                                <h5>Motivation</h5>
+                                <p>{{ character.motivation|linebreaks }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <p class="text-muted">No characters have been created for this game yet.</p>
+                {% endif %}
+            </div>
+        </div>
+        
+        <!-- Locations -->
+        <div class="card shadow mb-4">
+            <div class="card-header bg-primary text-white">
+                <h3 class="card-title mb-0">Locations</h3>
+            </div>
+            <div class="card-body">
+                {% if game.locations.all %}
+                <div class="accordion" id="locationsAccordion">
+                    {% for location in game.locations.all %}
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="locHeading{{ location.id }}">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#locCollapse{{ location.id }}" aria-expanded="false" aria-controls="locCollapse{{ location.id }}">
+                                {{ location.name }}
+                            </button>
+                        </h2>
+                        <div id="locCollapse{{ location.id }}" class="accordion-collapse collapse" aria-labelledby="locHeading{{ location.id }}" data-bs-parent="#locationsAccordion">
+                            <div class="accordion-body">
+                                <p>{{ location.description|linebreaks }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <p class="text-muted">No locations have been created for this game yet.</p>
+                {% endif %}
+            </div>
+        </div>
+        
+        <!-- Images -->
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h3 class="card-title mb-0">Concept Art</h3>
+            </div>
+            <div class="card-body">
+                {% if game.images.all %}
+                <div id="gameImagesCarousel" class="carousel slide" data-bs-ride="carousel">
+                    <div class="carousel-inner">
+                        {% for image in game.images.all %}
+                        <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                            <img src="{{ image.image.url }}" class="d-block w-100" alt="{{ image.description }}">
+                            {% if image.description %}
+                            <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 rounded">
+                                <p>{{ image.description }}</p>
+                            </div>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#gameImagesCarousel" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#gameImagesCarousel" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
+                {% else %}
+                <div class="text-center">
+                    <img src="https://via.placeholder.com/300x200.png?text=No+Images" class="img-fluid" alt="No Images">
+                    <p class="text-muted mt-2">No concept art has been created for this game yet.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

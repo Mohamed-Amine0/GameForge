@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block title %}My Favorites - GameForge{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-12">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h3 class="card-title mb-0">My Favorite Games</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-text">These are the game concepts you've marked as favorites.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if games %}
+<div class="row row-cols-1 row-cols-md-3 g-4">
+    {% for game in games %}
+    <div class="col">
+        <div class="card h-100 shadow game-card">
+            {% if game.images.first %}
+            <img src="{{ game.images.first.image.url }}" class="card-img-top" alt="{{ game.title }}">
+            {% else %}
+            <img src="https://via.placeholder.com/300x200.png?text=No+Image" class="card-img-top" alt="No Image">
+            {% endif %}
+            <div class="card-body">
+                <h5 class="card-title">{{ game.title }}</h5>
+                <p class="card-text">
+                    <span class="badge bg-primary">{{ game.get_genre_display }}</span>
+                    <span class="badge bg-secondary">{{ game.get_ambiance_display }}</span>
+                </p>
+                <p class="card-text">{{ game.universe_description|truncatechars:100 }}</p>
+            </div>
+            <div class="card-footer">
+                <div class="d-flex justify-content-between align-items-center">
+                    <small class="text-muted">By {{ game.user.username }}</small>
+                    <div>
+                        <a href="{% url 'games:game_detail' game.id %}" class="btn btn-sm btn-outline-primary">View Details</a>
+                        <a href="{% url 'games:toggle_favorite' game.id %}" class="btn btn-sm btn-outline-danger">Remove</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="alert alert-info">
+    <p>You haven't added any games to your favorites yet.</p>
+    <a href="{% url 'games:home' %}" class="btn btn-primary">Explore Games</a>
+</div>
+{% endif %}
+{% endblock %}
