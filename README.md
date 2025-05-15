@@ -62,8 +62,9 @@ GameForge est une plateforme complète qui permet aux utilisateurs de :
    ```
    SECRET_KEY=your_secret_key
    DEBUG=True
-   HUGGING_FACE_API_KEY=your_hugging_face_api_key
+   HUGGING_FACE_API_KEY=your_hugging_face_api_key_here
    ```
+   Note : Vous devez obtenir votre propre token Hugging Face et le configurer ici pour utiliser les fonctionnalités d'IA.
 
 5. Exécuter les migrations :
    ```

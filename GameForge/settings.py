@@ -146,3 +146,15 @@ AUTH_USER_MODEL = "accounts.User"
 LOGIN_URL = "accounts:login"
 LOGIN_REDIRECT_URL = "games:dashboard"
 LOGOUT_REDIRECT_URL = "games:home"
+
+# Hugging Face API settings
+HUGGING_FACE_API_KEY = os.getenv("HUGGING_FACE_API_KEY", "your_hugging_face_api_key_here")
+
+# AI Models
+AI_TEXT_MODELS = [
+    {"id": "mistralai/Mistral-7B-v0.1", "name": "Mistral 7B"},
+    {"id": "mistralai/Mixtral-8x7B-Instruct-v0.1", "name": "Mixtral 8x7B Instruct"},
+    {"id": "google/gemma-7b-it", "name": "Gemma 7B"},
+]
+
+AI_IMAGE_MODEL = "stabilityai/stable-diffusion-xl-base-1.0"
