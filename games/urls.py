@@ -18,5 +18,4 @@ urlpatterns = [
     path('public/', public_games_view, name='public-dashboard'),
     path('explore/', explore_public_games, name='explore-public'),
 
-
 ]
