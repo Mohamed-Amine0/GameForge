@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block title %}Mes favoris{% endblock %}
+
+{% block content %}
+<h2 class="text-2xl mb-4">⭐ Mes jeux en favoris</h2>
+
+{% if favorites %}
+  <ul class="space-y-4">
+    {% for fav in favorites %}
+      <li class="bg-gray-800 p-4 rounded">
+        <h3>{{ fav.game.title }}</h3>
+        <p>Genre : {{ fav.game.get_genre_display }} | Ambiance : {{ fav.game.get_mood_display }}</p>
+        <a href="{% url 'game-detail' fav.game.id %}" class="arcade-button mt-2 inline-block">Voir le jeu</a>
+      </li>
+    {% endfor %}
+  </ul>
+{% else %}
+  <p>Aucun jeu ajouté en favori.</p>
+{% endif %}
+{% endblock %}

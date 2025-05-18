@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block title %}Mon Tableau de Bord{% endblock %}
+
+{% block content %}
+<h2 class="text-2xl mb-4">🧾 Mes jeux</h2>
+
+<form method="GET" action="" class="mb-6">
+  <input type="text" name="q" value="{{ query }}" placeholder="Rechercher un jeu..." class="px-4 py-2 rounded bg-gray-800 text-white border border-pink-500">
+  <button type="submit" class="arcade-button ml-2">🔍 Chercher</button>
+</form>
+
+<div class="mb-6 flex items-center gap-4">
+  <label for="filter" class="text-lg font-bold">Filtrer :</label>
+  <form method="GET">
+    <select name="filter" onchange="this.form.submit()" class="bg-gray-800 text-white px-3 py-2 rounded">
+      <option value="all" {% if filter_type == 'all' %}selected{% endif %}>Tous mes jeux</option>
+      <option value="public" {% if filter_type == 'public' %}selected{% endif %}>Public</option>
+      <option value="private" {% if filter_type == 'private' %}selected{% endif %}>Privé</option>
+    </select>
+  </form>
+</div>
+
+{% if projects %}
+  <ul class="space-y-6">
+    {% for game in projects %}
+      <li class="bg-black border border-pink-500 p-4 rounded-lg shadow-md">
+        <h3 class="text-xl text-pink-400">{{ game.title }}</h3>
+        <p>🎮 {{ game.get_genre_display }} | 🎨 {{ game.get_mood_display }}</p>
+        <p class="text-sm text-gray-400">Créé le {{ game.created_at|date:"d/m/Y H:i" }}</p>
+        <a href="{% url 'game-detail' game.id %}" class="arcade-button mt-2 inline-block">Voir</a>
+      </li>
+    {% endfor %}
+  </ul>
+{% else %}
+  <p>Aucun jeu trouvé.</p>
+{% endif %}
+{% endblock %}

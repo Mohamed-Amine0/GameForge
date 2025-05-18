@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% block title %}{{ game.title }}{% endblock %}
+
+{% block content %}
+{% if game.is_public and user != game.user %}
+  <form method="POST" action="{% url 'toggle-favorite' game.id %}">
+    {% csrf_token %}
+    {% if is_favorite %}
+      <button type="submit" class="arcade-button">💔 Retirer des favoris</button>
+    {% else %}
+      <button type="submit" class="arcade-button">⭐ Ajouter aux favoris</button>
+    {% endif %}
+  </form>
+{% endif %}
+
+<h2 class="text-3xl text-pink-400 mb-4">{{ game.title }}</h2>
+<p><strong>🎮 Genre :</strong> {{ game.get_genre_display }}</p>
+<p><strong>🎨 Ambiance :</strong> {{ game.get_mood_display }}</p>
+<p><strong>🔓 Visibilité : </strong>
+  {% if game.is_public %}
+    Public
+  {% else %}
+    Privé
+  {% endif %}
+</p>
+
+<hr class="my-4 border-pink-500">
+
+<h3 class="text-xl text-cyan-300">🌌 Univers</h3>
+<p class="mb-4">{{ game.universe_description }}</p>
+
+<h3 class="text-xl text-cyan-300">📖 Scénario</h3>
+<p class="mb-4">{{ game.main_story }}</p>
+
+<h3 class="text-xl text-cyan-300">🧍 Personnages</h3>
+
+<ul class="list-disc ml-6 mb-4">
+  {% for character in game.characters %}
+    <li>{{ character }}</li>
+  {% empty %}
+    <li>Aucun personnage généré</li>
+  {% endfor %}
+</ul>
+
+<h3 class="text-xl text-cyan-300">🗺️ Lieux emblématiques</h3>
+<ul class="list-disc ml-6 mb-4">
+  {% for location in game.locations %}
+    <li>{{ location }}</li>
+  {% empty %}
+    <li>Aucun lieu généré</li>
+  {% endfor %}
+</ul>
+
+{% if request.user == game.user %}
+  <form method="POST" action="{% url 'toggle-visibility' game.id %}">
+    {% csrf_token %}
+    <button type="submit" class="arcade-button mt-4">
+      {% if game.is_public %}
+        🔒 Rendre Privé
+      {% else %}
+        🌍 Rendre Public
+      {% endif %}
+    </button>
+  </form>
+{% endif %}
+
+<a href="{% url 'export-gdd' game.id %}" class="arcade-button mt-4 inline-block">
+  📄 Télécharger le GDD complet
+</a>
+
+<a href="{% url 'export-pdf' game.id %}" class="arcade-button mt-4 inline-block">
+  🧾 Télécharger la fiche PDF
+</a>
+
+{% endblock %}

@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block title %}Jeux publics{% endblock %}
+{% block content %}
+<h2 class="text-2xl mb-6">🌍 Jeux publics</h2>
+
+{% if projects %}
+  <ul class="space-y-4">
+    {% for game in projects %}
+      <li class="bg-gray-800 p-4 rounded">
+        <h3>{{ game.title }}</h3>
+        <p>Genre : {{ game.get_genre_display }} | Ambiance : {{ game.get_mood_display }}</p>
+        <a href="{% url 'game-detail' game.id %}" class="arcade-button">Voir</a>
+      </li>
+    {% endfor %}
+  </ul>
+{% else %}
+  <p>Aucun jeu public n’est encore disponible.</p>
+{% endif %}
+{% endblock %}

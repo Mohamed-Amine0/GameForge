@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block title %}{{ game.title }} - Histoire interactive{% endblock %}
+
+{% block content %}
+<h2 class="text-xl mb-4">{{ scene.title }}</h2>
+<p>{{ scene.text }}</p>
+
+{% if outcome %}
+  <div class="my-4 p-2 bg-pink-900 text-white">
+    <strong>Conséquence :</strong> {{ outcome }}
+  </div>
+{% endif %}
+
+<div class="mt-4 space-x-4">
+  {% for choice in scene.choices %}
+    <a href="?step={{ step }}&choice={{ choice.label }}" class="arcade-button">
+      {{ choice.label }} – {{ choice.text }}
+    </a>
+  {% endfor %}
+</div>
+
+{% if outcome %}
+  <a href="?step={{ next_step }}" class="arcade-button mt-4 inline-block">▶ Continuer</a>
+{% endif %}
+{% endblock %}

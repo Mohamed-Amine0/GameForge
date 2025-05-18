@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2 class="text-2xl text-cyan-300 mb-6">Formulaire de test</h2>
+print("Rendering create_game.html...")
+<form method="POST">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit" class="arcade-button">Envoyer</button>
+</form>
+{% endblock %}

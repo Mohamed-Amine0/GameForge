@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <style>
+    body { font-family: sans-serif; padding: 2rem; }
+    h1, h2 { color: #34495e; border-bottom: 1px solid #ccc; }
+    .section { margin-bottom: 2rem; }
+    ul { padding-left: 20px; }
+  </style>
+</head>
+<body>
+
+<h1>Game Design Document – {{ game.title }}</h1>
+<p><strong>Créé par :</strong> {{ game.user.username }}</p>
+<p><strong>Genre :</strong> {{ game.get_genre_display }} | <strong>Ambiance :</strong> {{ game.get_mood_display }}</p>
+<p><strong>Date :</strong> {{ game.created_at|date:"d/m/Y H:i" }}</p>
+
+<div class="section">
+  <h2>🌌 Univers</h2>
+  <p>{{ game.universe_description }}</p>
+</div>
+
+<div class="section">
+  <h2>📖 Scénario principal</h2>
+  <p>{{ game.main_story }}</p>
+</div>
+
+<div class="section">
+  <h2>🧍 Personnages</h2>
+  <ul>
+    {% for c in game.characters %}
+      <li>{{ c }}</li>
+    {% endfor %}
+  </ul>
+</div>
+
+<div class="section">
+  <h2>🗺️ Lieux emblématiques</h2>
+  <ul>
+    {% for l in game.locations %}
+      <li>{{ l }}</li>
+    {% endfor %}
+  </ul>
+</div>
+
+{% if game.interactive_story %}
+  <div class="section">
+    <h2>🧠 Narration Interactive</h2>
+    {% for s in game.interactive_story.scenes %}
+      <h3>{{ s.title }}</h3>
+      <p>{{ s.text }}</p>
+      <ul>
+        {% for c in s.choices %}
+          <li><strong>{{ c.label }}</strong>: {{ c.text }} – <em>{{ c.outcome }}</em></li>
+        {% endfor %}
+      </ul>
+    {% endfor %}
+  </div>
+{% endif %}
+
+</body>
+</html>

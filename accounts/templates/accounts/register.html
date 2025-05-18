@@ -1,0 +1,80 @@
+{% extends 'base_auth.html' %}
+{% block title %}Créer un compte GameForge{% endblock %}
+
+{% block content %}
+<h2 class="text-2xl text-cyan-300 mb-6 text-center">📝 Créer un compte GameForge</h2>
+<style>
+    input[type="text"],
+input[type="password"],
+input[type="file"] {
+  background: #1f0033;
+  color: white;
+  border: 2px solid #00ffff;
+  padding: 8px;
+  width: 100%;
+  border-radius: 8px;
+}
+input:focus {
+  outline: none;
+  border-color: #ff00ff;
+  box-shadow: 0 0 5px #ff00ff;
+}
+
+</style>
+
+<form method="POST" enctype="multipart/form-data" class="space-y-6">
+  {% csrf_token %}
+
+  <div>
+    <label for="id_username" class="block mb-1">Nom d'utilisateur :</label>
+    {{ form.username }}
+    {% if form.username.errors %}
+      <p class="text-red-400 text-sm mt-1">{{ form.username.errors.0 }}</p>
+    {% endif %}
+  </div>
+
+  <div>
+    <label for="id_password1" class="block mb-1">Mot de passe :</label>
+    {{ form.password1 }}
+    <ul class="text-sm text-gray-300 mt-2">
+      <li>⚠️ Doit contenir au moins 8 caractères</li>
+      <li>⚠️ Ne pas être trop simple ni entièrement numérique</li>
+    </ul>
+    {% if form.password1.errors %}
+      <p class="text-red-400 text-sm mt-1">{{ form.password1.errors.0 }}</p>
+    {% endif %}
+  </div>
+
+  <div>
+    <label for="id_password2" class="block mb-1">Confirmation :</label>
+    {{ form.password2 }}
+    {% if form.password2.errors %}
+      <p class="text-red-400 text-sm mt-1">{{ form.password2.errors.0 }}</p>
+    {% endif %}
+  </div>
+
+  <div>
+    <label for="id_avatar" class="block mb-1">Avatar :</label>
+    {{ form.avatar }}
+    {% if form.avatar.errors %}
+      <p class="text-red-400 text-sm mt-1">{{ form.avatar.errors.0 }}</p>
+    {% endif %}
+    <img id="avatarPreview" src="#" alt="Aperçu avatar" class="mt-4 rounded hidden" style="max-height: 150px;" />
+  </div>
+
+  <div class="text-center">
+    <button type="submit" class="arcade-button w-full">S'INSCRIRE</button>
+  </div>
+</form>
+
+<script>
+  document.getElementById('id_avatar').onchange = evt => {
+    const [file] = evt.target.files;
+    if (file) {
+      const preview = document.getElementById('avatarPreview');
+      preview.src = URL.createObjectURL(file);
+      preview.classList.remove('hidden');
+    }
+  };
+</script>
+{% endblock %}

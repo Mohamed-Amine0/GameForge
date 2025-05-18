@@ -1,0 +1,55 @@
+{% extends 'base_auth.html' %}
+{% block title %}Paramètres du compte{% endblock %}
+
+{% block content %}
+<h2 class="text-2xl text-center text-cyan-300 mb-6">⚙️ Mon profil</h2>
+
+<form method="POST" enctype="multipart/form-data" class="mb-8 space-y-4">
+  {% csrf_token %}
+  
+  <label for="id_avatar" class="block mb-1">Nouvel avatar :</label>
+  {{ avatar_form.avatar }}
+  
+  <!-- Aperçu -->
+  {% if user.avatar %}
+  <img id="avatarPreview" src="{{ user.avatar.url }}" alt="Aperçu de l'avatar"
+       class="mt-4 rounded" style="max-height: 150px;" />
+{% else %}
+  <img id="avatarPreview" src="#" alt="Aperçu de l'avatar"
+       class="mt-4 rounded hidden" style="max-height: 150px;" />
+{% endif %}
+
+
+  <button type="submit" name="update_avatar" class="arcade-button w-full">
+    🖼️ Mettre à jour l'avatar
+  </button>
+</form>
+
+
+<hr class="my-6 border-pink-500">
+
+<h3 class="text-xl mb-4 text-center">🔐 Changer le mot de passe</h3>
+
+<form method="POST" class="space-y-4">
+  {% csrf_token %}
+  {{ password_form.as_p }}
+  <button type="submit" name="change_password" class="arcade-button w-full">Mettre à jour le mot de passe</button>
+</form>
+
+<script>
+  document.getElementById('id_avatar').addEventListener('change', function(evt) {
+    const [file] = evt.target.files;
+    if (file) {
+      const preview = document.getElementById('avatarPreview');
+      preview.src = URL.createObjectURL(file);
+      preview.classList.remove('hidden');
+    }
+  });
+</script>
+<div class="mt-10 text-center">
+  <a href="{% url 'dashboard' %}" class="arcade-button inline-block">
+    🏠 Retour au tableau de bord
+  </a>
+</div>
+
+{% endblock %}

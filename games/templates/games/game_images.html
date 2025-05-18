@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block title %}Images du jeu{% endblock %}
+
+{% block content %}
+<h2 class="text-3xl mb-4">🖼️ Illustrations générées pour {{ game.title }}</h2>
+
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+  <div class="border p-4 bg-black rounded shadow">
+    <h3 class="mb-2 text-pink-400">👤 Personnage</h3>
+    {% if image_char %}
+      <img src="{{ image_char }}" alt="Personnage généré" class="w-full rounded">
+    {% else %}
+      <p>Image non générée</p>
+    {% endif %}
+  </div>
+  <div class="border p-4 bg-black rounded shadow">
+    <h3 class="mb-2 text-cyan-400">🌆 Environnement</h3>
+    {% if image_env %}
+      <img src="{{ image_env }}" alt="Environnement généré" class="w-full rounded">
+    {% else %}
+      <p>Image non générée</p>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

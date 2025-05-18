@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block title %}Explorer les jeux publics{% endblock %}
+
+{% block content %}
+<h2 class="text-2xl mb-4">🌍 Explorer les jeux publics</h2>
+
+<form method="GET" class="mb-6">
+  <input type="text" name="q" value="{{ query }}" placeholder="Rechercher un jeu public..." class="px-4 py-2 rounded bg-gray-800 text-white border border-cyan-400">
+  <button type="submit" class="arcade-button ml-2">🔍 Chercher</button>
+</form>
+
+{% if projects %}
+  <ul class="space-y-6">
+    {% for game in projects %}
+      <li class="bg-black border border-cyan-500 p-4 rounded-lg shadow-md">
+        <h3 class="text-xl text-cyan-300">{{ game.title }}</h3>
+        <p>🎮 {{ game.get_genre_display }} | 🎨 {{ game.get_mood_display }}</p>
+        <p class="text-sm text-gray-400">Par : {{ game.user.username }} | {{ game.created_at|date:"d/m/Y H:i" }}</p>
+        <a href="{% url 'game-detail' game.id %}" class="arcade-button mt-2 inline-block">Voir</a>
+      </li>
+    {% endfor %}
+  </ul>
+{% else %}
+  <p>Aucun jeu public trouvé.</p>
+{% endif %}
+{% endblock %}

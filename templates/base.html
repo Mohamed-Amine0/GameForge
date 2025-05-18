@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>{% block title %}GameForge Arcade{% endblock %}</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+  <style>
+    body {
+      background: linear-gradient(135deg, #1a002b, #25004d);
+      color: #f0f0f0;
+      font-family: 'Press Start 2P', cursive;
+    }
+    nav {
+      background-color: #0f0c29;
+      box-shadow: 0 0 15px #ff00ff;
+    }
+    nav a {
+      color: #00ffff;
+    }
+    nav a:hover {
+      color: #ff00ff;
+      text-shadow: 0 0 5px #ff00ff;
+    }
+    h1, h2, h3 {
+      text-shadow: 0 0 8px #00ffff;
+    }
+    .arcade-button {
+      background: #ff00ff;
+      color: black;
+      padding: 10px 20px;
+      border: 2px solid #00ffff;
+      font-weight: bold;
+      text-transform: uppercase;
+      box-shadow: 0 0 5px #00ffff;
+    }
+    .arcade-button:hover {
+      background: #00ffff;
+      color: #ff00ff;
+      box-shadow: 0 0 10px #ff00ff;
+    }
+  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+</head>
+<body class="min-h-screen">
+
+  <nav class="p-4 text-sm">
+    <ul class="flex gap-6 justify-center">
+      <li><a href="{% url 'account-settings' %}">⚙️ Mon compte</a></li>
+      <li><a href="{% url 'dashboard' %}">🏠 Dashboard</a></li>
+      <li><a href="{% url 'create-game' %}">🎮 Créer un jeu</a></li>
+      <li>
+      <li><a href="{% url 'explore-public' %}">🌍 Explorer</a></li>
+        <form method="POST" action="{% url 'logout' %}">
+          {% csrf_token %}
+          <button type="submit" class="arcade-button">🚪 Déconnexion</button>
+        </form>
+      </li>
+
+    </ul>
+  </nav>
+
+  <div class="p-4 text-center">
+    <a href="{% url 'random-game' %}" class="arcade-button">🎲 Générer un jeu aléatoire</a>
+  </div>
+
+  <main class="p-6 max-w-4xl mx-auto">
+    {% block content %}{% endblock %}
+  </main>
+
+</body>
+</html>

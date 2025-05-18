@@ -1,0 +1,15 @@
+echo "
+# Python
+*.pyc
+__pycache__/
+
+# Django
+db.sqlite3
+.env
+/media/
+staticfiles/
+
+# Environnement virtuel
+env/
+venv/
+" > .gitignore

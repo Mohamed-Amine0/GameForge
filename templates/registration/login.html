@@ -1,0 +1,25 @@
+{% extends 'base_auth.html' %}
+{% block title %}Connexion{% endblock %}
+
+{% block content %}
+<h2 class="text-xl mb-6 text-center">🔐 Connexion</h2>
+
+<form method="POST" class="space-y-4">
+  {% csrf_token %}
+  {{ form.non_field_errors }}
+  <div>
+    <label for="id_username" class="block mb-1">Nom d'utilisateur :</label>
+    {{ form.username }}
+  </div>
+  <div>
+    <label for="id_password" class="block mb-1">Mot de passe :</label>
+    {{ form.password }}
+  </div>
+
+  <button type="submit" class="arcade-button w-full">Se connecter</button>
+</form>
+
+<p class="mt-6 text-sm text-center">
+  Pas encore de compte ? <a href="{% url 'register' %}" class="text-blue-300 underline">Créer un compte</a>
+</p>
+{% endblock %}
